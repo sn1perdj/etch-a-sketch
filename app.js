@@ -1,26 +1,30 @@
-
-/* Reloading the page when the "clear" button is clicked. */
-const btn = document.querySelector('button');
-btn.addEventListener('click', (e) => {
-    location.reload();
-})
+let board = document.querySelector(".board");
+const clear = document.querySelector('.clear');
+const colorSelection = document.querySelector('#myColorInput');
+var color = 'black';
 
 
-/**
- * When the user clicks on a square, change the background color of that square to red.
- */
-function colorSquare(){
-    this.style.backgroundColor = "red";
+/* clears the board */
+function eraseColor() {
+    var gridPixels = board.querySelectorAll('div');
+    gridPixels.forEach(grid => grid.style.backgroundColor = "#ffffff");
 }
 
 
-/**
- * It creates a grid of divs with the class "design" and adds an event listener to each div that calls
- * the colorSquare function when the mouse is over or down on the div.
- * @param size - the number of squares per side
- */
+/* selects the user picked color */
+function colorPicker(event) {
+    color = event.target.value;
+}
+
+
+/* function to store color value */
+function colorSquare(){
+    this.style.backgroundColor = color;
+}
+
+
+/* creates a board and fill the color on "mouseOver" */
 function generateBoard(size) {
-    let board = document.querySelector(".board");
     /* Setting the number of columns in the grid. */
     board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     /* Setting the number of rows in the grid. */
@@ -38,12 +42,8 @@ function generateBoard(size) {
 }
   
 
-
-/* This is a prompt that asks the user to enter a number between 2 and 100. If the user enters a number
-outside of that range, the prompt will ask the user to enter a number between 2 and 100 again. If
-the user enters a number between 2 and 100, the prompt will stop asking the user to enter a number
-and will generate a board with the number of cells that the user entered. */
-let size = prompt("Enter the board size");
+/* asks user to select the board size */
+let size = prompt("Enter the board size: 2-100");
 while (true) {
     if (size < 2 || size > 100) {
         size = prompt(`${size}, is not a valid number! Kindly Enter between "2-100"`);
@@ -51,5 +51,8 @@ while (true) {
         break;
     }
 }
-generateBoard(7);
 
+
+clear.addEventListener('click', eraseColor);
+colorSelection.addEventListener('input', colorPicker, false);
+generateBoard(size);
